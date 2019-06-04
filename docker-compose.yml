@@ -14,3 +14,9 @@ services:
       - 5432:5432
     environment:
       POSTGRES_PASSWORD: example
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d/
+      - ./db/postgres-data:/var/lib/postgresql/data
+
+  redis:
+      image: "redis:alpine"
