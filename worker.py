@@ -1,8 +1,11 @@
-import psycopg2
+from redis import Redis
+from rq import Worker, Queue, Connection
 
-conn = psycopg2.connect(dbname="postgres", user="postgres", password="example", host="postgres")
-cursor = conn.cursor()
+listen = ['high', 'default', 'low']
 
+redis_conn = Redis(host='redis', port=6379)
 
-def add_person_to_db(person):
-    cursor.execute("INSERT INTO Persons(name, age) VALUES (%s, %s)", (person.name, person.age))
+if __name__ == '__main__':
+    with Connection(redis_conn):
+        worker = Worker(map(Queue, listen))
+        worker.work()

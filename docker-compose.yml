@@ -1,7 +1,7 @@
 version: '3'
 services:
   api:
-    image: "pfr/api:latest"
+    image: pfr/api:latest
     ports:
       - "5000:5000"
 
@@ -17,6 +17,12 @@ services:
     volumes:
       - ./db:/docker-entrypoint-initdb.d/
       - ./db/postgres-data:/var/lib/postgresql/data
+
+  worker:
+    image: pfr/worker:latest
+    depends_on:
+      - redis
+      - postgres
 
   redis:
       image: "redis:alpine"

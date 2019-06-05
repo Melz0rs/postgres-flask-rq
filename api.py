@@ -1,7 +1,8 @@
-from flask import Flask, jsonify
+from flask import Flask, request, jsonify
 from rq import Queue
 from redis import Redis
-import worker
+import jobs
+import time
 
 app = Flask(__name__)
 redis_conn = Redis(host='redis', port=6379)
@@ -14,10 +15,16 @@ def hello_world():
 
 
 @app.route('/persons/add', methods=['POST'])
-def add_person(person):
-    app.logger.info("adding person")
+def add_person():
+    app.logger.info(f"adding person: {request.json}")
 
-    q.enqueue(worker.add_person_to_db, person)
+    job = q.enqueue(jobs.add_person_to_db, request.json)
+
+    time.sleep(1)
+
+    app.logger.info(f"job result: {job.result}")
+
+    return job.result
 
 
 if __name__ == '__main__':

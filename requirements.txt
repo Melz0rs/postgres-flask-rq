@@ -1,2 +1,4 @@
 flask
 Psycopg2
+redis
+rq
