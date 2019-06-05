@@ -20,7 +20,8 @@ def add_person():
 
     job = q.enqueue(jobs.add_person_to_db, request.json)
 
-    time.sleep(1)
+    while job.result is None:
+	pass
 
     app.logger.info(f"job result: {job.result}")
 
