@@ -21,7 +21,7 @@ def add_person():
     job = q.enqueue(jobs.add_person_to_db, request.json)
 
     while job.result is None:
-	pass
+        pass
 
     app.logger.info(f"job result: {job.result}")
 
